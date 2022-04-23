@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin/', admin.site.urls), 
     path('', include('medicSearch.urls.HomeUrls')),
     path('profile/', include('medicSearch.urls.ProfileUrls')),
+    path('medic/', include('medicSearch.urls.MedicUrls')),
 
 ] + static(settings
         .STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings
