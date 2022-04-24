@@ -51,3 +51,12 @@ class Profile(models.Model):
             return 'Sem avaliações'
         except:
             return 'Sem avaliações'
+
+    def show_favorites(self):
+        ids = [result.id for result in self.favorites.all()]
+        return Profile.objects.filter(user__id__in=ids)
+
+
+    def show_ratings(self):
+        from .Rating import Rating
+        return Rating.objects.filter(user_rated=self.user)

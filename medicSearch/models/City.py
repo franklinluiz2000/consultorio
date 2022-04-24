@@ -9,3 +9,4 @@ class City(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.name, self.state.name)
+        # return self.name

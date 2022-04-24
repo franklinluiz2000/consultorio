@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from medicSearch.models import Profile
 from medicSearch.models import Speciality
 from django.db.models import Q
@@ -51,6 +51,78 @@ def list_medics_view(request):
     # metodo context pode ser passado um dicionário
     return render(request, template_name='medic/medics.html', context=context, status=200)
 
+
+def add_favorite_view(request):
+    # Pegando os dados que são usados pela requisição POST
+    page = request.POST.get("page")
+    name = request.POST.get("name")
+    speciality = request.POST.get("speciality")
+    neighborhood = request.POST.get("neighborhood")
+    city = request.POST.get("city")
+    state = request.POST.get("state")
+    id = request.POST.get("id")
+
+    try:
+        # Pega o perfil do usuário logado e atribui como obj no 'profile'
+        profile = Profile.objects.filter(user=request.user).first()
+        # Pega o perfil do médico pelo id que enviamos através da requisição POST e o atribui como objeto na variável 'medic'
+        medic = Profile.objects.filter(user__id=id).first()
+        # Acessando o atributo 'favorites'
+        profile.favorites.add(medic.user)
+        profile.save()
+        msg = "Favorito adicionado com sucesso"
+        _type = "success"
+
+    except Exception as e:
+        print("Erro %s" % e)
+        msg = "Um erro ocorreu ao salvar o médico nos favoritos"
+        _type = "danger"
+
+    if page:
+        arguments = "?page=%s" % (page)
+    else:
+        arguments = "?page=1"
+    if name:
+        arguments += "&name=%s" % name
+    if speciality:
+        arguments += "&specinality=%s" % speciality
+    if neighborhood:
+        arguments += "&neighborhood=%s" % neighborhood
+    if city:
+        arguments += "&city=%s" % city
+    if state:
+        arguments += "&state=%s" % state
+
+    arguments += "&msg=%s&type=%s" % (msg, _type)
+
+    return redirect(to='/medic/%s' % arguments)
+
+
+
+def remove_favorite_view(request):
+    page = request.POST.get("page")
+    id = request.POST.get("id")
+
+    try:
+        profile = Profile.objects.filter(user=request.user).first()
+        medic = Profile.objects.filter(user__id=id).first()
+        profile.favorites.remove(medic.user)
+        profile.save()
+        msg = "Favorito removido com sucesso."
+        _type = "success"
+    except Exception as e:
+        print("Erro %s" % e)
+        msg = "Um erro ocorreu ao remover o médico nos favoritos."
+        _type = "danger"
+
+    if page:
+        arguments = "?page=%s" % (page)
+    else:
+        arguments = "?page=1"
+
+    arguments += "&msg=%s&type=%s" % (msg, _type)
+    
+    return redirect(to='/profile/%s' % arguments)
 
 
     # CREATE

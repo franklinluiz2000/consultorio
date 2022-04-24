@@ -6,7 +6,15 @@
 <div id="content">
     <div class="container">
         <div class="alert alert-info">
-            Foram encontrados: {{ medic | length }} medico(s)</div>
+            Foram encontrados: {{ medics | length }} medico(s)
+        </div>
+
+        {% if request.GET.msg %}
+            <div class="alert alert-{{request.GET.type}}">
+                {{ request.GET.msg }}
+            </div>
+        {% endif %}
+
         <div class="row">
         {% for medic in medics %}
             <div class="col-xs-12 col-md-3 col-lg-3">
@@ -15,18 +23,34 @@
                     <div class="card-body">
                         <h5 class="card-title"> {{medic.user.get_full_name}} </h5>
                         <h6>Nota: {{medic.show_scoring_average}} <i class="fa fa-star"></i></h6>
+                        
+                        {% comment %} listagem de todas as especialidades do médico {% endcomment %}
                         <ul class="specialties">
                             {% for speciality in medic.specialties.all %}
                                 <li>{{speciality}}</li>
                             {% endfor %}
                         </ul>
-
+                        
                         <div class="address mb-2" title="{{medic.addresses.first.address}}" alt="{{medic.addresses.first.address}}">
                             {{medic.addresses.first.address | default:"Nenhum endereço." | slice:":15"}}...
                         </div>
 
-                        <a href={% url 'profile' medic.user.id %}class="btn btn-primary btn-card">Ver médico</a>
-                        <button class="btn btn-danger btn-card"><i class="fa fa-heart"></i> Favoritos</a>
+                        <a href={% url 'profile' medic.user.id %} class="btn btn-primary btn-card">Ver médico</a>
+                        
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="/medic/favorite">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{medic.user.id}}" name="id">
+                                <input type="hidden" value="{{request.GET.page}}" name="page">
+                                <input type="hidden" value="{{request.GET.name}}" name="name">
+                                <input type="hidden" value="{{request.GET.speciality}}" name="speciality">
+                                <input type="hidden" value="{{request.GET.neighborhood}}" name="neighborhood">
+                                <input type="hidden" value="{{request.GET.city}}" name="city">
+                                <input type="hidden" value="{{request.GET.state}}" name="state">
+                                <button type="submit" class="btn btn-danger btn-card"><i class="fa fa-heart"></i> Favoritos</button>
+                            </form>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -37,9 +61,8 @@
                 <ul class="pagination">
 
                     {% if medics.has_previous %}
-                    <!-- Perceba que usamos a variável parameters s
-                    empre para manter os parâmetros da url mesmo quando trocamos entr
-                    e uma número de paginação e outro -->
+                    <!-- Perceba que usamos a variável parameters sempre para manter os parâmetros da url 
+                    mesmo quando trocamos entre um número de paginação e outro -->
                         <li class="page-item"><a class="page-link" href="?page=1{{ parameters }}">&laquo; Primeiro</a></li>
                         <li class="page-item"><a class="page-link" href="?page={{ medics.previous_page_number }}{{ parameters }}">Anterior</a></li>
                     {% endif %}
