@@ -8,7 +8,15 @@
     <div id="content">
         <div class="container-fluid">
             <div class="row">
-                <form class="col-md-6 col-lg-6 offset-md-3 offset-lg-3" method="POST" action="">
+
+                {% comment %} O enctype="multipart/form-data" é o responsável por dizer ao formulário que enviaremos arquivos 
+                em nossa requisição para o servidor. Com isso, já conseguimos salvar imagens em nosso banco de dados!{% endcomment %}
+                <form class="col-md-6 col-lg-6 offset-md-3 offset-lg-3" method="POST" action="" enctype="multipart/form-data">
+                    {% if message is not None %}
+                    <div class="alert alert-{{ message.type }}">
+                        {{ message.text }}
+                    </div>
+                    {% endif %}
                     <div class="row">
                     {% csrf_token %}
                     {% comment %} f: aqui temos a iteração do objeto form , que possui uma lista com todos os campos. 
@@ -20,6 +28,11 @@
                         <div class="form-group col-md-6">
                             {{ f.label }}
                             {{ f }}
+                            {% for error in f.errors %}
+                            <div class="invalid-feedback" style="display: initial;">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
                         </div>
                             {% else %}
                             {{ f }}
@@ -31,6 +44,11 @@
                         <div class="form-group col-md-6">
                             {{ f.label }}
                             {{ f }}
+                            {% for error in f.errors %}
+                            <div class="invalid-feedback" style="display: initial;">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
                         </div>
                         {% else %}
                             {{ f }}
