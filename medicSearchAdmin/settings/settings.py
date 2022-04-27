@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'medicSearch',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -138,3 +141,34 @@ LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout'
 LOGOUT_REDIRECT_URL = '/login'
+
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+SOCIAL_AUTH_FACEBOOK_KEY = "516125816557898" 
+SOCIAL_AUTH_FACEBOOK_SECRET = "d3cedcece9c8208807747214e33c79fe"
+
+# contém uma lista de permissões para acessar as propriedades de dados que nosso aplicativo requer.
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] 
+
+# possui uma chave fields em que o valor é uma lista de atributos que devem ser retornados pelo Facebook 
+# quando o usuário tiver efetuado login com êxito. Os valores dependem de SOCIAL_AUTH_FACEBOOK_SCOPE .
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = { 
+    'fields': 'id, name, email, picture.type(large), link'
+}
+
+# precisamos especificá-lo para armazenar os dados adicionais que solicitamos ao banco de dados.
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [ 
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '192932203006-j3d0e4pv53mljnkqqd1dqfbah4a0ojfr.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'

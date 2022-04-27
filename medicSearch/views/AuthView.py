@@ -7,9 +7,14 @@ def login_view(request):
     loginForm = LoginForm()
     message = None
 
+    # Ao tentar ir para a tela de login se usuario estiver logado 
+    # irá ser direcionado para a tela de perfil
     if request.user.is_authenticated:
-        return redirect('/')
+        message = 'teste'
+        return redirect('/profile')
 
+    # Após fazer o login com todos os testes de autenticação 
+    # o usuário é direcionado a tela de perfil
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -22,7 +27,7 @@ def login_view(request):
                 if _next is not None:
                     return redirect(_next)
                 else:
-                    return redirect("/")
+                    return redirect("/profile")
             else:
                 message = {
                 'type': 'danger',
@@ -46,7 +51,7 @@ def register_view(request):
     message = None
 
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/profile')
 
     if request.method == 'POST':
         username = request.POST['username']
