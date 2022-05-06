@@ -172,3 +172,21 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '192932203006-j3d0e4pv53mljnkqqd1dqfbah4a0ojfr.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+
+# recuperar senha pelo email
+# Campo que diz se será usada a criptografia TLS ou não no envio
+EMAIL_USE_TLS = True
+# host do seu provedor de e-mail, geralmente também é informado na documentação do provedor de seu e-mail.
+EMAIL_HOST = 'smtp.gmail.com'
+# e-mail que será usado para fazer o envio dos e-mails.
+EMAIL_HOST_USER = 'teste@gmail.com'
+# senha
+EMAIL_HOST_PASSWORD = 'teste123'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# campo que informa se será usada a criptografia SSL no envio.
+EMAIL_USE_SSL = False
+
+import django_heroku
+django_heroku.settings(locals())

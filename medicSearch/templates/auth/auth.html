@@ -27,9 +27,15 @@
             <a href="{{link_href}}" style="display: block; text-align: center; margin-bottom: 20px;">
                 {{link_text}}
             </a>
+            {% if title == 'Login'%}
+                <a href={% url 'recovery' %} class="text-center mt-2 mb-2" style="display: block;">
+                    Esqueci minha senha
+                </a>
+            {% endif %}
             <button type="submit" class="btn btn-primary">
                 {{button_text}}
             </button>
+            {% if title != 'Recuperar senha' and title != 'Alterar senha'%}
                 <p class="text-center mt-2 mb-2" style="display: block;">Ou</p>
                 <div class="social-container">
                     <a class="btn" id="facebook" href="{% url 'social:begin' 'facebook' %}">
@@ -39,6 +45,7 @@
                         <i class="fa fa-google"></i>
                     </a>
                 </div>
+            {% endif %}
             </form>
         </div>
     </div>
